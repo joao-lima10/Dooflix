@@ -79,7 +79,7 @@ public class Users {
 
         return "\nName: " + getName() +
                 "\nCpf: " + getCpf() +
-                "\nEmail: " + getCpf() +
+                "\nEmail: " + getEmail() +
                 "\nUsername: " + getUsername();
 
     }
