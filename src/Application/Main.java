@@ -18,8 +18,8 @@ public class Main {
 
     public static void choice() {
 
-        System.out.println("Welcome to Dooflix");
-        System.out.println("Select option");
+        System.out.println("\nWelcome to Dooflix");
+        System.out.println("\nSelect option");
         System.out.println("Option 1: Create Account");
         System.out.println("Option 2: Enter your account");
         System.out.println("Option 3: Recover my password");
@@ -84,17 +84,36 @@ public class Main {
     }
 
     public static void enterAccount() {
-
         System.out.printf("\nUsername: ");
-
         String username = sc.next();
 
         System.out.printf("\nPassword: ");
-
         String password = sc.next();
+
+        boolean validLogin = false;
+
+        for (Users user : userList) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                validLogin = true;
+                break;
+            }
+        }
+
+        if (validLogin) {
+            System.out.println("Next"); // Login válido
+            System.out.println("\nWelcome " + username + ", have fun!");
+            System.out.println("\nSee some movies in high: ");
+            System.out.println("\nOppenheimer" +
+                    "\nBarbie" +
+                    "\nTransformer" +
+                    "\nFast & Furious");
+        } else {
+            System.out.println("Invalid login"); // Login inválido
+        }
 
         choice();
     }
+
 
     public static void recoverPassword() {
 
