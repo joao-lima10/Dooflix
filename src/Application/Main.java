@@ -1,14 +1,28 @@
 package Application;
 
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Scanner;
 import Contas.Users;
 import java.util.ArrayList;
 import Contas.Login;
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 public class Main {
     static Scanner sc = new Scanner(System.in);
     static ArrayList<Users> userList;
 
     public static void main(String[] args) {
+
+        try {
+            Connection con = DriverManager.getConnection
+                    ( "jdbc:mysql://localhost:3306/mysql", "root", "06062020");
+
+            System.out.println(con);
+        }
+        catch (Exception e){
+        }
 
         userList = new ArrayList<>();
 
@@ -109,6 +123,8 @@ public class Main {
                     "\nFast & Furious");
         } else {
             System.out.println("Invalid login"); // Login inválido
+
+
         }
 
         choice();
