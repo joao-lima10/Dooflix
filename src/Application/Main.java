@@ -142,7 +142,6 @@ public class Main {
         } else {
             System.out.println("Invalid login"); // Login inválido
 
-
         }
 
         choice();
