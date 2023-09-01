@@ -1,13 +1,10 @@
 package Application;
 
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Scanner;
 import Contas.Users;
 import java.util.ArrayList;
 import Contas.Login;
-import java.sql.Connection;
-import java.sql.DriverManager;
 
 public class Main {
     static Scanner sc = new Scanner(System.in);
@@ -17,7 +14,7 @@ public class Main {
 
         try {
             Connection con = DriverManager.getConnection
-                    ( "jdbc:mysql://localhost:3306/mysql", "root", "06062020");
+                    ( "jdbc:mysql://localhost:3306/dooflix", "root", "06062020");
 
             System.out.println(con);
         }
@@ -72,7 +69,6 @@ public class Main {
     }
 
     public static void createAccount() {
-
         System.out.println("Name: ");
         String name = sc.next();
 
@@ -89,6 +85,28 @@ public class Main {
         String password = sc.next();
 
         Users users = new Users(name, cpf, email, username, password);
+
+        // Adicione o código para inserir os dados no banco de dados
+        try {
+            Connection con = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/dooflix", "root", "06062020");
+
+            String query = "INSERT INTO users (name, cpf, email, username) VALUES (?, ?, ?, ?)";
+
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, cpf);
+            preparedStatement.setString(3, email);
+            preparedStatement.setString(4, username);
+
+            preparedStatement.executeUpdate();
+
+            preparedStatement.close();
+            con.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         userList.add(users);
 
