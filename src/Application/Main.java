@@ -86,7 +86,7 @@ public class Main {
 
         Users users = new Users(name, cpf, email, username, password);
 
-        // Adicione o código para inserir os dados no banco de dados
+        // Adicionando o código para inserir os dados no banco de dados
         try {
             Connection con = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/dooflix", "root", "06062020");
@@ -124,28 +124,128 @@ public class Main {
 
         boolean validLogin = false;
 
+        //declarei uma nova variável sem ligação com a Users
+        Users currentUser = null;
+
+        // faz o processo de validação do login
         for (Users user : userList) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
                 validLogin = true;
+                currentUser = user;
                 break;
             }
         }
 
         if (validLogin) {
-            System.out.println("Next"); // Login válido
             System.out.println("\nWelcome " + username + ", have fun!");
-            System.out.println("\nSee some movies in high: ");
-            System.out.println("\nOppenheimer" +
-                    "\nBarbie" +
-                    "\nTransformer" +
-                    "\nFast & Furious");
-        } else {
-            System.out.println("Invalid login"); // Login inválido
 
+            boolean loggedIn = true;
+
+            //repetição do menu enquanto for verdadeiro
+            while (loggedIn) {
+
+                System.out.println("\nSelect an option:");
+                System.out.println("Option 1: View Movies");
+                System.out.println("Option 2: Settings");
+                System.out.println("Option 3: Logout");
+
+                int userChoice = sc.nextInt();
+
+                switch (userChoice) {
+
+                    case 1:
+
+                        seeMovies(currentUser);
+                        break;
+
+                    case 2:
+
+                        settingsMenu(currentUser);
+                        break;
+
+                    case 3:
+
+                        System.out.println("Logged out");
+                        loggedIn = false;
+                        break;
+
+                    default:
+                        System.out.println("Invalid choice");
+                        break;
+                }
+            }
+        } else {
+
+            System.out.println("Invalid login");
         }
 
         choice();
     }
+
+    private static void seeMovies(Users currentUser) {
+
+        System.out.println("\nSee some movies in high: ");
+
+        //quero adicionar algum direcionamento de link
+        System.out.println("\nOppenheimer" +
+                "\nBarbie" +
+                "\nTransformer" +
+                "\nFast & Furious");
+    }
+
+    public static void settingsMenu(Users currentUser) {
+
+        boolean settingsMenuOpen = true;
+
+        while (settingsMenuOpen) {
+
+            //criação de um menu de configurações
+            System.out.println("\nSettings Menu:");
+            System.out.println("Option 1: Change Profile Name");
+            System.out.println("Option 2: Add Payment Method");
+            System.out.println("Option 3: Back to Main Menu");
+
+            int choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1:
+
+                    System.out.println("Change your profile name: ");
+                    String newName = sc.next();
+                    currentUser.setName(newName);
+
+                    System.out.println("Profile name changed successfully.");
+
+                    break;
+
+                case 2:
+
+                    System.out.println("\nPut your credit card number: ");
+                    String creditCard = sc.next();
+
+                    System.out.println("\nAdd your security code: ");
+                    String secutiryCod = sc.next();
+
+                    System.out.println("\nAdd the card expiration date: ");
+                    String dataExpiration = sc.next();
+
+                    System.out.println("Credit Card add successfully");
+
+                    break;
+
+                case 3:
+
+                    System.out.println("Returning to main menu.");
+                    settingsMenuOpen = false;
+                    break;
+                default:
+                    System.out.println("Invalid option.");
+                    break;
+            }
+        }
+    }
+
 
 
     public static void recoverPassword() {
