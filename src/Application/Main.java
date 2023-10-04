@@ -1,14 +1,21 @@
 package Application;
 
+import java.awt.*;
 import java.sql.*;
 import java.util.Scanner;
+import java.net.URI;
+
+
+import Contas.Credit;
 import Contas.Users;
 import java.util.ArrayList;
-import Contas.Login;
+
 
 public class Main {
     static Scanner sc = new Scanner(System.in);
     static ArrayList<Users> userList;
+    static ArrayList<Credit> creditCard;
+    private static Connection con1;
 
     public static void main(String[] args) {
 
@@ -22,6 +29,8 @@ public class Main {
         }
 
         userList = new ArrayList<>();
+
+        creditCard = new ArrayList<>();
 
         choice();
 
@@ -144,7 +153,7 @@ public class Main {
             //repetição do menu enquanto for verdadeiro
             while (loggedIn) {
 
-                System.out.println("\nSelect an option:");
+                System.out.println("\nSelect the option:");
                 System.out.println("Option 1: View Movies");
                 System.out.println("Option 2: Settings");
                 System.out.println("Option 3: Logout");
@@ -183,68 +192,103 @@ public class Main {
     }
 
     private static void seeMovies(Users currentUser) {
-
         System.out.println("\nSee some movies in high: ");
+        System.out.println("1: Oppenheimer");
+        System.out.println("2: Barbie");
+        System.out.println("3: Transformer");
+        System.out.println("4: Fast & Furious");
 
-        //quero adicionar algum direcionamento de link
-        System.out.println("\nOppenheimer" +
-                "\nBarbie" +
-                "\nTransformer" +
-                "\nFast & Furious");
+        int movieChoice = sc.nextInt();
+
+        switch (movieChoice) {
+            case 1:
+                openLink("https://www.youtube.com/watch?v=kEGlCYF5gaU");
+                break;
+            case 2:
+
+                openLink("https://www.youtube.com/watch?v=Ujs1Ud7k49M");
+                break;
+            case 3:
+
+                openLink("https://www.youtube.com/watch?v=PHC412-pCoQ");
+                break;
+            case 4:
+
+                openLink("https://www.youtube.com/watch?v=a1w9x5U88jU");
+                break;
+            default:
+                System.out.println("Invalid choice");
+        }
     }
 
-    public static void settingsMenu(Users currentUser) {
+    private static void openLink(String url) {
+        try {
+            URI link = new URI(url);
+            Desktop.getDesktop().browse(link);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 
+
+    public static void settingsMenu(Users currentUser) {
         boolean settingsMenuOpen = true;
 
         while (settingsMenuOpen) {
 
-            //criação de um menu de configurações
             System.out.println("\nSettings Menu:");
-            System.out.println("Option 1: Change Profile Name");
-            System.out.println("Option 2: Add Payment Method");
-            System.out.println("Option 3: Back to Main Menu");
+            System.out.println("Option 1: Add Payment Method");
+            System.out.println("Option 2: Back to Main Menu");
 
             int choice = sc.nextInt();
 
             switch (choice) {
-
                 case 1:
+                    System.out.println("\nPut your credit card number: ");
+                    String cardnumber = sc.next();
 
-                    System.out.println("Change your profile name: ");
-                    String newName = sc.next();
-                    currentUser.setName(newName);
+                    System.out.println("\nAdd your security code: ");
+                    String cod = sc.next();
 
-                    System.out.println("Profile name changed successfully.");
+                    System.out.println("\nAdd the card expiration date: ");
+                    String date = sc.next();
 
+                    try {
+                        Connection con = DriverManager.getConnection(
+                                "jdbc:mysql://localhost:3306/dooflix", "root", "06062020");
+
+                        String query = "INSERT INTO credit (cardnumber, cod, date) VALUES (?, ?, ?)";
+
+                        PreparedStatement preparedStatement = con.prepareStatement(query);
+
+                        preparedStatement.setString(1, cardnumber);
+                        preparedStatement.setString(2, cod);
+                        preparedStatement.setString(3, date);
+
+                        preparedStatement.executeUpdate();
+
+                        preparedStatement.close();
+                        con.close();
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+                    System.out.println("Credit Card added successfully");
                     break;
 
                 case 2:
-
-                    System.out.println("\nPut your credit card number: ");
-                    String creditCard = sc.next();
-
-                    System.out.println("\nAdd your security code: ");
-                    String secutiryCod = sc.next();
-
-                    System.out.println("\nAdd the card expiration date: ");
-                    String dataExpiration = sc.next();
-
-                    System.out.println("Credit Card add successfully");
-
-                    break;
-
-                case 3:
-
                     System.out.println("Returning to main menu.");
                     settingsMenuOpen = false;
                     break;
+
                 default:
                     System.out.println("Invalid option.");
                     break;
             }
         }
     }
+
 
 
 
